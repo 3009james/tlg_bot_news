@@ -93,21 +93,47 @@ docker compose logs -f
 
 После этого любой `git push` в `main` автоматически обновит бота на сервере.
 
-## Команды бота
+## Интерфейс бота
 
+Основная работа через кнопки:
+- `Новый пост` - отправка ссылки и публикация;
+- `Источники` - просмотр и управление источниками;
+- `API-ключи` - добавление/переключение ключей;
+- `Инструкция` - пошаговые подсказки по разделам;
+- `Логи` - последние действия.
+
+Команды оставлены как резерв:
 - `/help`
 - `/sources`
 - `/source_add <name> <type> <base_url|-> <priority> <domains_csv|-> [settings_json]`
 - `/source_update <source_id> <base_url|-> [settings_json|->]`
-- `/source_select <id>`
-- `/source_enable <id>`
-- `/source_disable <id>`
-- `/source_priority <id> <priority>`
-- `/source_domains <id> <domain1,domain2|->`
-- `/source_test <id>`
 - `/cred_add <source_id> <label> <secret_name>`
-- `/cred_list <source_id>`
-- `/cred_use <source_id> <credential_id>`
 - `/logs [limit]`
 
-Для обработки контента просто отправьте боту URL.
+Для обработки контента отправьте боту URL.
+
+## Как вносить изменения
+
+1. Изменить код локально.
+2. Проверить, что Python-файлы валидны:
+
+```powershell
+python -c "import pathlib,ast; [ast.parse(p.read_text(encoding='utf-8')) for p in pathlib.Path('.').rglob('*.py')]; print('AST_OK')"
+```
+
+3. Закоммитить и отправить:
+
+```powershell
+git add .
+git commit -m "update bot"
+git push origin main
+```
+
+4. Дождаться автодеплоя GitHub Actions.
+5. Проверить на VPS:
+
+```bash
+cd /opt/tlg_bot_n
+docker compose ps
+docker compose logs -f --tail=100
+```
