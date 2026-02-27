@@ -8,6 +8,7 @@ from aiogram import Bot, Dispatcher
 from bot.handlers import build_router
 from bot.middleware import OwnerOnlyMiddleware
 from core.config import load_config
+from core.default_sources import ensure_default_sources
 from services.extractors import LinkExtractor
 from services.pipeline import ContentPipeline
 from services.publisher import ChannelPublisher
@@ -25,6 +26,7 @@ async def main() -> None:
     db = Database(str(config.db_path))
     await db.connect()
     repo = Repository(db=db, secret_box=SecretBox(config.encryption_key))
+    await ensure_default_sources(repo)
 
     source_manager = SourceManager(repo=repo, timeout_seconds=config.request_timeout_seconds)
     extractor = LinkExtractor(timeout_seconds=config.request_timeout_seconds)
