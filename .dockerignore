@@ -1,0 +1,9 @@
+.git
+.github
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+data/
+tlg_bot_news.ipynb
